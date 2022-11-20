@@ -10,8 +10,8 @@ dotenv.config()
 async function main() {
     // connect to goerli testnet, using the private key from .env
     // attach to an instance of the Ballot.sol contract and call the 
-    // const provider = ethers.getDefaultProvider("goerli", { etherscan: process.env.ETHERSCAN_API_KEY })
-    const provider = ethers.getDefaultProvider("hardhat");
+    const provider = ethers.getDefaultProvider("goerli", { etherscan: process.env.ETHERSCAN_API_KEY })
+    
     let wallet: Wallet;
 
     // check for accounts to use as signer in .env via mnemonic or private key
