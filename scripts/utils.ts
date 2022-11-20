@@ -14,10 +14,8 @@ export async function SetupSigner(): Promise<[Ballot, MyToken]> {
         wallet = new ethers.Wallet(process.env.PRIVATE_KEY ?? "")
     }
     const signer = wallet.connect(provider)
-
     const ballotFactory = new Ballot__factory(signer);
     const ballotContract = await ballotFactory.attach(ballotContractAddress);
-
     const tokenFactory = new MyToken__factory(signer);
     const tokenContract = await tokenFactory.attach(tokenContractAddress);
 

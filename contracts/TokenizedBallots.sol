@@ -8,25 +8,17 @@ interface IERC20Votes {
         returns (uint256);
 }
 
-contract Ballot {
+contract TokenizedBallots {
     IERC20Votes public voteToken;
-
     uint256 public targetBlockNumber;
-
     struct Proposal {
         bytes32 name;
         uint voteCount;
     }
-
     mapping(address => uint256) spentVotingPower;
-
     Proposal[] public proposals;
 
-    constructor(
-        bytes32[] memory proposalNames,
-        address _voteToken,
-        uint256 _targetBlockNumber
-    ) {
+    constructor( bytes32[] memory proposalNames, address _voteToken, uint256 _targetBlockNumber) {
         voteToken = IERC20Votes(_voteToken);
         targetBlockNumber = _targetBlockNumber;
         for (uint i = 0; i < proposalNames.length; i++) {
