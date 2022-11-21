@@ -1,32 +1,43 @@
-import { SetupSigner } from "./utils";
-//import { ballotContractAddress } from "./constants.ts";
-dotenv.config();
+
+
+import { SetupSigner, ballotContract } from "./utils";
+import "./constants.ts";
+import { Ballot } from "../typechain-types";
+dotenv.config()
 import * as dotenv from "dotenv";
+
+
 
 
 async function checkResults() {
     // TODO
     
-    const ballotContract = await SetupSigner();
+    let tokenizedBallotContract: Ballot;
+    const signer = await SetupSigner();
+    
+
+    // function from utils.ts
+    tokenizedBallotContract = await ballotContract(signer);
 
     // read winner name
-    const winnerName = await ballotContract.winnerName();
-    console.log(`winner name: ${winnerName}`);
+    const winnerName = await tokenizedBallotContract.winnerName();
+    console.log(`winner name: $(winnerName})`);
 
     // read winning proposal
-    const winninngProposal = await ballotContract.winningProposal();
-    console.log(`winning proposal: ${winninngProposal}`);
+    const winningProposal = tokenizedBallotContract.winningProposal();
+    console.log(`winning proposal: ${winningProposal}`);
+
 }
 
 checkResults().catch((error) => {
-    console.log(error);
+    console.error(error);
     process.exitCode = 1;
 });
 
 
 /*
 
-To run file,   yarn run ts-node --files ./scripts/CheckResults.ts   "ballotContractAddress"
+To run file,   yarn run ts-node --files ./scripts/CheckResults.ts ./scripts/CheckResults.ts  "ballotContractAddress"
 
 
 From constants.ts
