@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 import { MyToken__factory, TokenizedBallots__factory } from "../typechain-types";
 dotenv.config()
 
+// yarn run ts-node --files ./scripts/CheckVotePower.ts deployedContractAddressHere Address here
 
 async function checkVotePower() {
     const args = process.argv;
@@ -27,6 +28,7 @@ async function checkVotePower() {
 
     // Get the block number from when the contract was launched
     const targetBlockNumber = await ballotContract.targetBlockNumber();
+    console.log(`the contract was launched on block ${targetBlockNumber}`);
 
     const MyTokenFactory = new MyToken__factory();
     const MyTokenContract = MyTokenFactory.attach(contractAddress);
@@ -34,10 +36,12 @@ async function checkVotePower() {
     // Get the current block, which to use?
     //const currentBlock = await provider.getBlockNumber();
     const currentBlock = await provider.getBlock("latest");
-    
+    console.log(`the current block is ${currentBlock}`);
+
     // As per documentation, to get past votes, the blocknumber must have been already mined
     // So here we make sure that we have a larger block number
     if(currentBlock.number > targetBlockNumber.toNumber()){
+        console.log(`${currentBlock.number} is greater than ${targetBlockNumber.toNumber()}`);
         // Get passed voting power from when the Ballot contract was launched. Not current voting power.
         const pastVotes = MyTokenContract.getPastVotes(targetAccount, targetBlockNumber);
         console.log(`${targetAccount} has a voting power of ${pastVotes} for Ballot ${ballotContractAddress}`);
