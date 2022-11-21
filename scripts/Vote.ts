@@ -1,40 +1,42 @@
-import * from "./utils.ts";
+import { ethers } from "ethers";
+import { SetupSigner } from "./utils";
 import * from "./constants.ts";
-import { Wallet } from "ethers";
-import { TokenizedBallots } from "../typechain-types";
-import * as dotenv from "dotenv";
-dotenv.config()
+
 
 
 async function vote() {
     // TODO
     
-    let tokenizedBallotContract: TokenizedBallots;
-    // function from utils.ts
-    tokenizedBallotContract.SetUpSigner();
+    const [ballotContract, tokenContract] = await SetupSigner();
 
-    // function from utils.ts
-    tokenizedBallotContract.ballotContract(signer: Wallet);
-    
-    const args = process.argv.slice(2);
+
+    const args = process.argv.slice(3);
 
     const proposal = args[0];  // proposal index of 1/3 proposals
-    const amount = args[1];   // amount
-    console.log(`Voting for ${vote}`);
+    const voter = args[1]; // voter by address
+    const amount = ethers.utils.parseEther.args[2];   // amount
+    console.log(`Voting for ${proposal}`);
 
-    const tx = await tokenizedBallotContract.vote(proposal, amount);
 
-    const ballotContractAddress: string = "";
-    console.log(`Tokenized Ballot Contract Address at ${ballotContractAddress}`);
+    const tx = await tokenContract.vote(proposal, amount);
+
+    const mintTx = await tokenContract.mint(voter, amount);
+    await mintTx.wait();
+
+    let voterTokenBalance = await tokenContract.balanceOf(voter);
+    console.log(`After voting ${voter} has a total of ${voterTokenBalance} decimal units`);
+
+    
+    console.log(`Tokenized Ballot Contract Address at ${ballotContract}`);
     
     vote().catch((error) => {
-        console.error(error);
+        console.log(error);
         process.exitCode = 1;
     });
 
 };
 
-// To run file, yarn run ts-node --files scripts/Vote.ts proposalIndexNum amount
+// To run file, yarn run ts-node --files scripts/Vote.ts    proposal    voterAddress    amount
 
     /*
     From TokenizedBallots.sol
