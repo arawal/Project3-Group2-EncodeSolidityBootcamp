@@ -1,42 +1,55 @@
-import { ethers } from "ethers";
-import { SetupSigner } from "./utils";
-import * from "./constants.ts";
+import { ethers, Wallet } from "ethers";
+import { Ballot, Ballot__factory } from "../typechain-types";
+import * as dotenv from "dotenv";
+dotenv.config()
 
 
 
 async function vote() {
     // TODO
-    
-    const [ballotContract, tokenContract] = await SetupSigner();
+    let ballotContract: Ballot;
 
-    
-    const args = process.argv.slice(3);
+    const provider = ethers.getDefaultProvider("goerli", { etherscan: process.env.ETHERSCAN_API_KEY })
 
+    let wallet: Wallet;
+
+    // check for accounts to use as signer in .env via mnemonic or private key
+    if (process.env.MNEMONIC != "") {
+        wallet = ethers.Wallet.fromMnemonic(process.env.MNEMONIC ?? "")
+    } else {
+        wallet = new ethers.Wallet(process.env.PRIVATE_KEY ?? "")
+    }
+    const signer = wallet.connect(provider)
+    
+    const args = process.argv.slice(2);
     const proposal = args[0];  // proposal index of 1/3 proposals
     const voter = args[1]; // voter by address
-    const amount = ethers.utils.parseEther.args[2];   // amount
-    console.log(`Voting for ${proposal}`);
+    const amount = args[2];   // amount
+    const ballotContractAddress = args[3];   // contract address
+    console.log(`Input contract address: ${ballotContractAddress}`);
+    console.log(`Voting for ${proposal} from address ${voter} with amount ${amount}`);
 
+    if (args.length <= 0) throw new Error("Not enough parameters");
 
-    const tx = await tokenContract.vote(proposal, amount);
+    // create an instance of the contract using the 
+    const ballotFactory = new Ballot__factory(signer);
+    ballotContract = await ballotFactory.attach(ballotContractAddress);
+    console.log(`interacting with contract address: ${ballotContract.address}`);
+    
+    const tx = await ballotContract.vote(proposal, amount);
+    await tx.wait();
 
-    const mintTx = await tokenContract.mint(voter, amount);
-    await mintTx.wait()
-
-    let voterTokenBalance = await tokenContract.balanceOf(voter);
-    console.log(`After voting ${voter} has a total of ${voterTokenBalance} decimal units`);
-
+    console.log(`Transaction hash: ${tx.hash}`);
     
     console.log(`Tokenized Ballot Contract Address at ${ballotContract}`);
-    
-    vote().catch((error) => {
-        console.log(error);
-        process.exitCode = 1;
-    });
 
 };
 
-// To run file, yarn run ts-node --files scripts/Vote.ts    proposal    voterAddress    amount
+vote().catch((error) => {
+    console.log(error);
+    process.exitCode = 1;
+});
+// To run file, yarn run ts-node --files scripts/Vote.ts    proposal    voterAddress    amount    contractAddress
 
     /*
     From TokenizedBallots.sol
