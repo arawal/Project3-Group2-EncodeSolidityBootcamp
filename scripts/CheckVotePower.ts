@@ -10,7 +10,7 @@ async function checkVotePower() {
     const params = args.slice(2);
     const contractAddress = params[0]; // '0x284A7042be8749c1b3A35509F27ebb09c2737956'
     const targetAccount = params[1];
-    const ballotContractAddress = '0x3dB15985d01971Fe4417d5dDd3B1F7E72fefF743';
+    const ballotContractAddress = '0xEe69666C8670D4C1C632D1d34eba1b803C218479';
     if (params.length <= 0) throw new Error("Not enough parameters");
 
 
