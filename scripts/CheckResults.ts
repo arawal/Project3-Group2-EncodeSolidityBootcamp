@@ -1,8 +1,8 @@
 
-import * from "./utils.ts";
-import * from "./constants.ts";
-import { Wallet } from "ethers";
-import { TokenizedBallots } from "../typechain-types";
+
+import { SetupSigner, ballotContract } from "./utils";
+import "./constants.ts";
+import { Ballot } from "../typechain-types";
 dotenv.config()
 import * as dotenv from "dotenv";
 
@@ -12,21 +12,19 @@ import * as dotenv from "dotenv";
 async function checkResults() {
     // TODO
     
-    let tokenizedBallotContract: TokenizedBallots;
+    let tokenizedBallotContract: Ballot;
+    const signer = await SetupSigner();
     
-    // function from utils.ts
-    tokenizedBallotContract.SetUpSigner();
 
     // function from utils.ts
-    tokenizedBallotContract.ballotContract(signer: Wallet);
-
+    tokenizedBallotContract = await ballotContract(signer);
 
     // read winner name
     const winnerName = await tokenizedBallotContract.winnerName();
     console.log(`winner name: $(winnerName})`);
 
     // read winning proposal
-    const winningProposal = tokenizedBallotContract.sol.winningProposal();
+    const winningProposal = tokenizedBallotContract.winningProposal();
     console.log(`winning proposal: ${winningProposal}`);
 
 }
