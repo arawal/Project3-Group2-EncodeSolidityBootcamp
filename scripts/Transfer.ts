@@ -1,7 +1,6 @@
 import { ethers, Wallet } from "ethers";
 import { MyToken, MyToken__factory } from "../typechain-types";
 import * as dotenv from "dotenv";
-import { totalmem } from "os";
 dotenv.config()
 
 // yarn run ts-node --files ./scripts/Transfer.ts deployedContractAddressHere addressToTransferToHere amountToTransferHere
@@ -36,7 +35,7 @@ async function main() {
     if (params.length <= 0) throw new Error("Not enough parameters");
 
     let tokenContract: MyToken;
-    // create an instance of the contract using the 
+    // create an instance of the contract
     const tokenFactory = new MyToken__factory(signer);
     tokenContract = await tokenFactory.attach(contractAddress);
     console.log(`interacting with ${tokenContract.address}`);
