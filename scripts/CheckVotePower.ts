@@ -43,7 +43,7 @@ async function checkVotePower() {
     if(currentBlock.number > targetBlockNumber.toNumber()){
         console.log(`${currentBlock.number} is greater than ${targetBlockNumber.toNumber()}`);
         // Get passed voting power from when the Ballot contract was launched. Not current voting power.
-        const pastVotes = MyTokenContract.getPastVotes(targetAccount, targetBlockNumber);
+        const pastVotes = await MyTokenContract.getPastVotes(targetAccount, targetBlockNumber);
         console.log(`${targetAccount} has a voting power of ${pastVotes} for Ballot ${ballotContractAddress}`);
     }else{
         console.log("Contract has just launched. Please wait until next block number");
