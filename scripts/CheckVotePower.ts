@@ -3,7 +3,7 @@ import * as dotenv from "dotenv";
 import { MyToken__factory, TokenizedBallots__factory } from "../typechain-types";
 dotenv.config()
 
-// yarn run ts-node --files ./scripts/CheckVotePower.ts deployedContractAddressHere Address here
+// yarn run ts-node --files ./scripts/CheckVotePower.ts deployedContractAddressHere AddressToCheckHere
 
 async function checkVotePower() {
     const args = process.argv;
