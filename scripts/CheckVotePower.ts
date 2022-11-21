@@ -1,6 +1,6 @@
 import { ethers, Signer, Wallet } from "ethers";
 import * as dotenv from "dotenv";
-import { MyToken__factory, TokenizedBallots__factory } from "../typechain-types";
+import { MyToken__factory, Ballot__factory } from "../typechain-types";
 dotenv.config()
 
 // yarn run ts-node --files ./scripts/CheckVotePower.ts deployedContractAddressHere Address here
@@ -23,7 +23,7 @@ async function checkVotePower() {
         wallet = new ethers.Wallet(process.env.PRIVATE_KEY ?? "")
     }
     const signer = wallet.connect(provider);
-    const ballotFactory = new TokenizedBallots__factory(signer);
+    const ballotFactory = new Ballot__factory(signer);
     const ballotContract = await ballotFactory.attach(ballotContractAddress);
 
     // Get the block number from when the contract was launched
@@ -40,13 +40,13 @@ async function checkVotePower() {
 
     // As per documentation, to get past votes, the blocknumber must have been already mined
     // So here we make sure that we have a larger block number
-    if(currentBlock.number > targetBlockNumber.toNumber()){
+    if (currentBlock.number > targetBlockNumber.toNumber()) {
         console.log(`${currentBlock.number} is greater than ${targetBlockNumber.toNumber()}`);
         // Get passed voting power from when the Ballot contract was launched. Not current voting power.
         console.log(`Checking voting power for account: ${targetAccount}`);
-        const pastVotes = await MyTokenContract.getPastVotes(targetAccount, targetBlockNumber);
+        const pastVotes = await ballotContract.votePower(targetAccount);
         console.log(`${targetAccount} has a voting power of ${pastVotes} for Ballot ${ballotContractAddress}`);
-    }else{
+    } else {
         console.log("Contract has just launched. Please wait until next block number");
     }
 }
