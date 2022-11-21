@@ -37,7 +37,7 @@ checkResults().catch((error) => {
 
 /*
 
-To run file,   yarn run ts-node --files ./scripts/CheckResults.ts ./scripts/CheckResults.ts  "ballotContractAddress"
+To run file,   yarn run ts-node --files ./scripts/CheckResults.ts   "ballotContractAddress"
 
 
 From constants.ts
