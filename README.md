@@ -18,3 +18,7 @@ https://encodeclub.typeform.com/octoberweekend3
 #### Mint instructions
 
 `yarn ts-node --files .\scripts\Mint.ts <voter address> <amount>`
+
+#### Self-delegation instructions
+
+`yarn ts-node --files .\scripts\DelegateVotePower.ts "0x284A7042be8749c1b3A35509F27ebb09c2737956" <your-address>`
